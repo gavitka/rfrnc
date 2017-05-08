@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file>collage.psd</file>
+        <file>gay.jpg</file>
+    </qresource>
+</RCC>
