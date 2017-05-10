@@ -25,10 +25,12 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    qpsdhandler.cpp
+    qpsdhandler.cpp \
+    mainview.cpp
 
 HEADERS  += mainwindow.h \
-    qpsdhandler.h
+    qpsdhandler.h \
+    mainview.h
 
 RESOURCES += \
     res.qrc
