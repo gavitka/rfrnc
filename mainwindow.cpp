@@ -20,8 +20,7 @@ using namespace std;
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
-    this->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint | Qt::WindowSystemMenuHint | Qt::WindowStaysOnTopHint );
-    // | Qt::FramelessWindowHint
+    this->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint | Qt::WindowSystemMenuHint | Qt::WindowStaysOnTopHint);
 
     QDesktopWidget dw;
 
@@ -81,3 +80,4 @@ void MainWindow::focusOutEvent (QFocusEvent *event)
     //QFocusEvent event();
     QCoreApplication::sendEvent(m_mainview,event);
 }
+

@@ -7,6 +7,9 @@
 #include <Qt>
 #include <QScrollBar>
 #include <QDebug>
+#include <math.h>
+
+using namespace std;
 
 MainView::MainView(QGraphicsScene *scene, QWidget *parent):
     QGraphicsView(scene, parent)
@@ -18,9 +21,11 @@ MainView::MainView(QGraphicsScene *scene, QWidget *parent):
 void MainView::mousePressEvent(QMouseEvent *e)
 {
     time.start();
-    m_mousePressViewPoint = e->pos();
+    m_clickStartPoint = e->pos();
+    qDebug() << "started click";
     if (m_selected) {
         m_scrolling = true;
+        m_mousePressViewPoint = e->pos();
         viewport()->setCursor(Qt::ClosedHandCursor);
     }
     else {
@@ -32,9 +37,9 @@ void MainView::mousePressEvent(QMouseEvent *e)
 void MainView::mouseReleaseEvent(QMouseEvent *e)
 {
     int difference = time.elapsed();
-    QPoint delta = (e->pos() - m_mousePressViewPoint);
+    QPoint delta = (e->pos() - m_clickStartPoint);
     int deltasize = std::abs(delta.x()) + std::abs(delta.y());
-
+    qDebug()<<"Delta size"<<deltasize;
     if (difference < 200 && deltasize < 10) {
         if (m_selected == true) {
             m_selected = false;
@@ -79,4 +84,34 @@ void MainView::focusOutEvent(QFocusEvent *event)
     setStyleSheet("border: none");
 }
 
+void MainView::wheelEvent(QWheelEvent* event)
+{
+    if (!m_selected) return;
+    // Typical Calculations (Ref Qt Doc)
+    const int degrees = event->delta() / 8;
+    int steps = degrees / 15;
 
+    static qreal scale = 0;
+    static qreal scaleFactor = 0;
+    const qreal minFactor = .1;
+    const qreal maxFactor = 10.0;
+
+    if (steps > 0 && scaleFactor < maxFactor) {
+        scale ++;
+    }
+    else if (steps < 0 && scaleFactor > minFactor) {
+        scale --;
+    }
+
+    scaleFactor = exp(scale/4);
+    scaleFactor = (scaleFactor <= minFactor) ?
+                minFactor :
+                (scaleFactor >= maxFactor) ? maxFactor : scaleFactor;
+
+    qDebug() << "scale" << scale;
+    qDebug() << "scaleFactor" << scaleFactor;
+
+
+    setTransformationAnchor(QGraphicsView::AnchorViewCenter);
+    setTransform(QTransform(scaleFactor, 0, 0, scaleFactor, 0, 0));
+}
