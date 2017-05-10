@@ -2,6 +2,7 @@
 #define MAINVIEW_H
 #include <QGraphicsView>
 #include <QPoint>
+#include <QTime>
 
 class QGraphicsScene;
 class QGraphicsSceneMouseEvent;
@@ -15,12 +16,15 @@ public:
     void mousePressEvent(QMouseEvent * e);
     void mouseMoveEvent(QMouseEvent *e);
     void mouseReleaseEvent(QMouseEvent *e);
+    void focusOutEvent ( QFocusEvent * event );
 
 private:
 
     bool m_scrolling;
-    QPoint m_mousePressViewPoint;
+    bool m_selected;
 
+    QPoint m_mousePressViewPoint;
+    QTime time;
 };
 
 #endif // MAINVIEW_H

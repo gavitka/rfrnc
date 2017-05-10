@@ -11,6 +11,7 @@
 #include <QSize>
 #include <QDesktopWidget>
 #include <math.h>
+#include <QCoreApplication>
 
 #include "mainview.h"
 
@@ -40,12 +41,12 @@ MainWindow::MainWindow(QWidget *parent)
     QGraphicsScene* scene = new QGraphicsScene();
     scene->addWidget(label);
 
-    MainView* view = new MainView(scene, this);
-    view->setDragMode(QGraphicsView::ScrollHandDrag);
-    view->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    view->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    m_mainview = new MainView(scene, this);
+    m_mainview->setDragMode(QGraphicsView::ScrollHandDrag);
+    m_mainview->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    m_mainview->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
-    setCentralWidget(view);
+    setCentralWidget(m_mainview);
 
     setMinimumWidth(200);
     setMinimumHeight(200);
@@ -61,7 +62,7 @@ MainWindow::MainWindow(QWidget *parent)
 
 MainWindow::~MainWindow()
 {
-
+    delete m_mainview;
 }
 
 void MainWindow::mousePressEvent(QMouseEvent *event)
@@ -73,4 +74,10 @@ void MainWindow::mousePressEvent(QMouseEvent *event)
 void MainWindow::mouseMoveEvent(QMouseEvent *event)
 {
     move(event->globalX()-m_nMouseClick_X_Coordinate,event->globalY()-m_nMouseClick_Y_Coordinate);
+}
+
+void MainWindow::focusOutEvent (QFocusEvent *event)
+{
+    //QFocusEvent event();
+    QCoreApplication::sendEvent(m_mainview,event);
 }

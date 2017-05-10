@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 
+class MainView;
 class QImage;
 
 class MainWindow : public QMainWindow
@@ -17,8 +18,11 @@ public:
 
 private:
 
+    MainView* m_mainview;
+
     void mousePressEvent(QMouseEvent *event);
     void mouseMoveEvent(QMouseEvent *event);
+    void focusOutEvent ( QFocusEvent * event );
 
     int m_nMouseClick_X_Coordinate;
     int m_nMouseClick_Y_Coordinate;
