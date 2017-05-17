@@ -46,7 +46,7 @@ public:
   static int mBorderWidth;
 };
 //TODO: Should not be static.
-int NcCursorPosCalculator::mBorderWidth = 5;
+int NcCursorPosCalculator::mBorderWidth = 8;
 
 class NcWidgetData
 {
@@ -167,7 +167,7 @@ NcWidgetData::NcWidgetData( NcFramelessHelperImpl* _d, QWidget* topLevelWidget )
   bool visible = mWidget->isVisible();
 
   mWidget->setMouseTracking( true );
-  mWidget->setWindowFlags( Qt::CustomizeWindowHint|Qt::FramelessWindowHint );
+  mWidget->setWindowFlags(Qt::FramelessWindowHint|Qt::WindowStaysOnTopHint );// Qt::CustomizeWindowHint|
   //Bug fix, mouse move events does not propagate from child widgets.
   //so need the hover events.
   mWidget->setAttribute( Qt::WA_Hover );

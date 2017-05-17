@@ -21,6 +21,7 @@ private:
     void mouseReleaseEvent(QMouseEvent *e);
     void focusOutEvent ( QFocusEvent * event );
     void wheelEvent(QWheelEvent *event);
+    bool event(QEvent * event);
 
     bool m_scrolling;
     bool m_selected;

@@ -3,7 +3,6 @@
 #include <QMouseEvent>
 #include <QFocusEvent>
 #include <QCoreApplication>
-#include <QCoreApplication>
 #include <Qt>
 #include <QScrollBar>
 #include <QDebug>
@@ -16,6 +15,7 @@ MainView::MainView(QGraphicsScene *scene, QWidget *parent):
 {
     m_scrolling = false;
     m_selected = false;
+    setStyleSheet("border: 2px solid #0f3c38");
 }
 
 void MainView::mousePressEvent(QMouseEvent *e)
@@ -43,7 +43,7 @@ void MainView::mouseReleaseEvent(QMouseEvent *e)
     if (difference < 200 && deltasize < 10) {
         if (m_selected == true) {
             m_selected = false;
-            setStyleSheet("border: none");
+            setStyleSheet("border: 2px solid #0f3c38");
         }
         else {
             setStyleSheet("border: 3px solid orange");
@@ -54,6 +54,7 @@ void MainView::mouseReleaseEvent(QMouseEvent *e)
     if (m_scrolling) {
         m_scrolling = false;
         viewport()->setCursor(Qt::OpenHandCursor);
+        viewport()->unsetCursor();
     }
     else {
         QMouseEvent event(e->type(), e->localPos(), e->button(), e->buttons(), e->modifiers());
@@ -81,7 +82,7 @@ void MainView::focusOutEvent(QFocusEvent *event)
 {
     Q_UNUSED(event);
     m_selected = false;
-    setStyleSheet("border: none");
+    setStyleSheet("border: 2px solid #0f3c38");
 }
 
 void MainView::wheelEvent(QWheelEvent* event)
@@ -114,4 +115,17 @@ void MainView::wheelEvent(QWheelEvent* event)
 
     setTransformationAnchor(QGraphicsView::AnchorViewCenter);
     setTransform(QTransform(scaleFactor, 0, 0, scaleFactor, 0, 0));
+}
+
+bool MainView::event(QEvent *event)
+{
+    if (    event->type() == QEvent::MouseButtonDblClick ||
+            event->type() == QEvent::MouseButtonPress ||
+            event->type() == QEvent::MouseButtonRelease ||
+            event->type() == QEvent::MouseMove   ) {
+        return false;
+    } else {
+        QGraphicsView::event(event);
+        return true;
+    }
 }

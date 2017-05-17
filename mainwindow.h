@@ -5,6 +5,7 @@
 
 class MainView;
 class QImage;
+class NcFramelessHelper;
 
 class MainWindow : public QMainWindow
 {
@@ -19,6 +20,7 @@ public:
 private:
 
     MainView* m_mainview;
+    NcFramelessHelper* mFh;
 
     void mousePressEvent(QMouseEvent *event);
     void mouseMoveEvent(QMouseEvent *event);
@@ -26,6 +28,7 @@ private:
 
     int m_nMouseClick_X_Coordinate;
     int m_nMouseClick_Y_Coordinate;
+    void openFile();
 };
 
 #endif // MAINWINDOW_H

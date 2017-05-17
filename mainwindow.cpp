@@ -13,18 +13,34 @@
 #include <math.h>
 #include <QCoreApplication>
 
+#include "NcFramelessHelper.h"
 #include "mainview.h"
+#include "mainscene.h"
 
 using namespace std;
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
-    this->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint | Qt::WindowSystemMenuHint | Qt::WindowStaysOnTopHint);
+    //this->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint | Qt::WindowSystemMenuHint | Qt::WindowStaysOnTopHint | Qt::FramelessWindowHint);
+    this->setWindowFlags(Qt::WindowStaysOnTopHint | Qt::FramelessWindowHint);
 
-    QDesktopWidget dw;
+    mFh = new NcFramelessHelper;
+    mFh->activateOn( this );
+    mFh->useRubberBandOnMove(true);
+    mFh->useRubberBandOnResize(true);
 
-    QFile file (QString("E:/Developement/untitled1/collage.psd"));
+    openFile();
+}
+
+MainWindow::~MainWindow()
+{
+    delete m_mainview;
+}
+
+void MainWindow::openFile()
+{
+    QFile file (QString(":/Images/collage.psd"));
     file.open(QIODevice::ReadOnly);
     auto handler = new QPsdHandler();
     QImage image;
@@ -37,11 +53,11 @@ MainWindow::MainWindow(QWidget *parent)
     label->setPixmap(pix);
     //label->resize(pix.size());
 
-    QGraphicsScene* scene = new QGraphicsScene();
+    MainScene* scene = new MainScene();
     scene->addWidget(label);
 
     m_mainview = new MainView(scene, this);
-    m_mainview->setDragMode(QGraphicsView::ScrollHandDrag);
+    //m_mainview->setDragMode(QGraphicsView::ScrollHandDrag);
     m_mainview->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     m_mainview->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
@@ -59,20 +75,15 @@ MainWindow::MainWindow(QWidget *parent)
                  min(pix.size().height(),500)));
 }
 
-MainWindow::~MainWindow()
-{
-    delete m_mainview;
-}
-
 void MainWindow::mousePressEvent(QMouseEvent *event)
 {
-    m_nMouseClick_X_Coordinate = event->x();
-    m_nMouseClick_Y_Coordinate = event->y();
+//    m_nMouseClick_X_Coordinate = event->x();
+//    m_nMouseClick_Y_Coordinate = event->y();
 }
 
 void MainWindow::mouseMoveEvent(QMouseEvent *event)
 {
-    move(event->globalX()-m_nMouseClick_X_Coordinate,event->globalY()-m_nMouseClick_Y_Coordinate);
+//    move(event->globalX()-m_nMouseClick_X_Coordinate,event->globalY()-m_nMouseClick_Y_Coordinate);
 }
 
 void MainWindow::focusOutEvent (QFocusEvent *event)
@@ -80,4 +91,5 @@ void MainWindow::focusOutEvent (QFocusEvent *event)
     //QFocusEvent event();
     QCoreApplication::sendEvent(m_mainview,event);
 }
+
 
