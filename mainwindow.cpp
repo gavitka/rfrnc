@@ -12,6 +12,7 @@
 #include <QDesktopWidget>
 #include <math.h>
 #include <QCoreApplication>
+#include <QColor>
 
 #include "NcFramelessHelper.h"
 #include "mainview.h"
@@ -23,7 +24,7 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
     //this->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint | Qt::WindowSystemMenuHint | Qt::WindowStaysOnTopHint | Qt::FramelessWindowHint);
-    this->setWindowFlags(Qt::WindowStaysOnTopHint | Qt::FramelessWindowHint);
+    //this->setWindowFlags(Qt::WindowStaysOnTopHint | Qt::FramelessWindowHint);
 
     mFh = new NcFramelessHelper;
     mFh->activateOn( this );
@@ -60,6 +61,9 @@ void MainWindow::openFile()
     //m_mainview->setDragMode(QGraphicsView::ScrollHandDrag);
     m_mainview->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     m_mainview->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    QColor color;
+    color.setNamedColor("#858e8e");
+    m_mainview->setBackgroundBrush(QBrush(color, Qt::SolidPattern));
 
     setCentralWidget(m_mainview);
 

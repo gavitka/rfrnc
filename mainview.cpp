@@ -22,7 +22,6 @@ void MainView::mousePressEvent(QMouseEvent *e)
 {
     time.start();
     m_clickStartPoint = e->pos();
-    qDebug() << "started click";
     if (m_selected) {
         m_scrolling = true;
         m_mousePressViewPoint = e->pos();
@@ -39,7 +38,6 @@ void MainView::mouseReleaseEvent(QMouseEvent *e)
     int difference = time.elapsed();
     QPoint delta = (e->pos() - m_clickStartPoint);
     int deltasize = std::abs(delta.x()) + std::abs(delta.y());
-    qDebug()<<"Delta size"<<deltasize;
     if (difference < 200 && deltasize < 10) {
         if (m_selected == true) {
             m_selected = false;
