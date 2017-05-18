@@ -23,7 +23,7 @@
 
 using namespace std;
 
-const int marginAmount = 4;
+const int marginAmount = 10;
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -73,15 +73,29 @@ void MainWindow::openFile()
     //----------------------------------------------------------------------------------------------------------
     // NOT WORKING
 
-    QPushButton * pushButton = new QPushButton("ssibal", this);
+    Sutton * pushButton = new Sutton(this);
+    pushButton->setMainclr("#547a6b");
     Sutton * pushButton2 = new Sutton(this);
-    QSpacerItem *spaceritem1 = new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Expanding);
+    pushButton2->setMainclr("#547a6b");
+    Sutton * pushButton3 = new Sutton(this);
+    pushButton3->setMainclr("#547a6b");
+    QSpacerItem *spaceritem1 = new QSpacerItem(marginAmount*1.5,
+                                               marginAmount*1.5,
+                                               QSizePolicy::Fixed,
+                                               QSizePolicy::Fixed);
+    QSpacerItem *spaceritem2 = new QSpacerItem(marginAmount*1.5,
+                                               marginAmount*1.5,
+                                               QSizePolicy::Fixed,
+                                               QSizePolicy::Fixed);
 
     QHBoxLayout *hboxLayout = new QHBoxLayout();
+//    hboxLayout->addSpacerItem(spaceritem1);
+    hboxLayout->addWidget(pushButton3, 0, Qt::AlignRight | Qt::AlignBottom);
     hboxLayout->addSpacerItem(spaceritem1);
     hboxLayout->addWidget(pushButton2, 0, Qt::AlignRight | Qt::AlignBottom);
+    hboxLayout->addSpacerItem(spaceritem2);
     hboxLayout->addWidget(pushButton, 0, Qt::AlignRight | Qt::AlignBottom);
-    hboxLayout->setMargin(marginAmount);
+    hboxLayout->setSpacing(0);
 
     //    QStackedLayout *stackedLayout = new QStackedLayout();
     //    //stackedLayout->insertWidget(1, layer1);
@@ -97,7 +111,7 @@ void MainWindow::openFile()
 
     overlayWidget = new QWidget(centralWidget);
     overlayWidget->setLayout(hboxLayout);
-    overlayWidget->setFixedSize(100+8,20+8);
+    overlayWidget->setFixedSize(120,40);
 
     //----------------------------------------------------------------------------------------------------------
 
