@@ -6,6 +6,7 @@
 class MainView;
 class QImage;
 class NcFramelessHelper;
+class QWidget;
 
 class MainWindow : public QMainWindow
 {
@@ -21,10 +22,10 @@ private:
 
     MainView* m_mainview;
     NcFramelessHelper* mFh;
+    QWidget* overlayWidget;
 
-    void mousePressEvent(QMouseEvent *event);
-    void mouseMoveEvent(QMouseEvent *event);
-    void focusOutEvent ( QFocusEvent * event );
+    void focusOutEvent (QFocusEvent *event);
+    void resizeEvent(QResizeEvent *event);
 
     int m_nMouseClick_X_Coordinate;
     int m_nMouseClick_Y_Coordinate;

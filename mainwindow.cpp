@@ -14,11 +14,15 @@
 #include <QCoreApplication>
 #include <QColor>
 
+#include <QTWidgets>
+
 #include "NcFramelessHelper.h"
 #include "mainview.h"
 #include "mainscene.h"
 
 using namespace std;
+
+const int marginAmount = 4;
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -65,10 +69,63 @@ void MainWindow::openFile()
     color.setNamedColor("#858e8e");
     m_mainview->setBackgroundBrush(QBrush(color, Qt::SolidPattern));
 
-    setCentralWidget(m_mainview);
+    //----------------------------------------------------------------------------------------------------------
+    // NOT WORKING
 
-    setMinimumWidth(200);
-    setMinimumHeight(200);
+    QPushButton * pushButton = new QPushButton("ssibal", this);
+    QPushButton * pushButton2 = new QPushButton("shit", this);
+    QSpacerItem *spaceritem1 = new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Expanding);
+
+    QHBoxLayout *hboxLayout = new QHBoxLayout();
+    hboxLayout->addSpacerItem(spaceritem1);
+    hboxLayout->addWidget(pushButton2, 0, Qt::AlignRight | Qt::AlignBottom);
+    hboxLayout->addWidget(pushButton, 0, Qt::AlignRight | Qt::AlignBottom);
+    hboxLayout->setMargin(marginAmount);
+
+    //    QStackedLayout *stackedLayout = new QStackedLayout();
+    //    //stackedLayout->insertWidget(1, layer1);
+    //    stackedLayout->insertWidget(0, m_mainview);
+    //    stackedLayout->setStackingMode(QStackedLayout::StackAll);
+
+    QHBoxLayout *hboxLayout1 = new QHBoxLayout();
+    hboxLayout1->addWidget(m_mainview);
+    hboxLayout1->setMargin(0);
+
+    QWidget *centralWidget = new QWidget(this);
+    centralWidget->setLayout(hboxLayout1);
+
+    overlayWidget = new QWidget(centralWidget);
+    overlayWidget->setLayout(hboxLayout);
+    overlayWidget->setFixedSize(100+8,20+8);
+
+    //----------------------------------------------------------------------------------------------------------
+
+    //    pushButton = new QPushButton("shit", this);
+    //    QLabel *label2 = new QLabel("Ssibal", this);
+    //    QSpacerItem *spaceritem1 = new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Expanding);
+
+    //    QHBoxLayout *hboxLayout = new QHBoxLayout();
+    //    hboxLayout->addSpacerItem(spaceritem1);
+    //    hboxLayout->addWidget(label2, 0, Qt::AlignRight | Qt::AlignBottom);
+    //    hboxLayout->addWidget(pushButton, 0, Qt::AlignRight | Qt::AlignBottom);
+
+    //    QWidget *layer1 = new QWidget(this);
+    //    layer1->setLayout(hboxLayout);
+
+    //    QStackedLayout *stackedLayout = new QStackedLayout();
+    //    //stackedLayout->insertWidget(1, layer1);
+    //    stackedLayout->insertWidget(0, m_mainview);
+    //    stackedLayout->setStackingMode(QStackedLayout::StackAll);
+
+    //    QWidget *centralWidget = new QWidget(this);
+    //    centralWidget->setLayout(stackedLayout);
+
+    //----------------------------------------------------------------------------------------------------------
+
+    setCentralWidget(centralWidget);
+
+    setMinimumWidth(overlayWidget->width()+marginAmount*2); // TODO: FIX
+    setMinimumHeight(overlayWidget->height()+marginAmount*2);
 
     QRect rect = QDesktopWidget().availableGeometry(this);
 
@@ -77,23 +134,18 @@ void MainWindow::openFile()
 
     resize(QSize(min(pix.size().width(),500),
                  min(pix.size().height(),500)));
-}
 
-void MainWindow::mousePressEvent(QMouseEvent *event)
-{
-//    m_nMouseClick_X_Coordinate = event->x();
-//    m_nMouseClick_Y_Coordinate = event->y();
-}
-
-void MainWindow::mouseMoveEvent(QMouseEvent *event)
-{
-//    move(event->globalX()-m_nMouseClick_X_Coordinate,event->globalY()-m_nMouseClick_Y_Coordinate);
+    overlayWidget->move(width() - overlayWidget->width() - marginAmount, height() - overlayWidget->height() - marginAmount);
 }
 
 void MainWindow::focusOutEvent (QFocusEvent *event)
 {
     //QFocusEvent event();
     QCoreApplication::sendEvent(m_mainview,event);
+}
+
+void MainWindow::resizeEvent(QResizeEvent *event) {
+    overlayWidget->move(width() - overlayWidget->width() - marginAmount, height() - overlayWidget->height() - marginAmount);
 }
 
 
