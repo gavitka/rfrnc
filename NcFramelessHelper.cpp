@@ -171,6 +171,7 @@ NcWidgetData::NcWidgetData( NcFramelessHelperImpl* _d, QWidget* topLevelWidget )
   //Bug fix, mouse move events does not propagate from child widgets.
   //so need the hover events.
   mWidget->setAttribute( Qt::WA_Hover );
+  mWidget->setAttribute( Qt::WA_NativeWindow, true);
 
   updateRubberBandStatus();
 

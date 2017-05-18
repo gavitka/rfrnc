@@ -28,13 +28,15 @@ SOURCES += main.cpp\
     qpsdhandler.cpp \
     mainview.cpp \
     NcFramelessHelper.cpp \
-    mainscene.cpp
+    mainscene.cpp \
+    sutton.cpp
 
 HEADERS  += mainwindow.h \
     qpsdhandler.h \
     mainview.h \
     NcFramelessHelper.h \
-    mainscene.h
+    mainscene.h \
+    sutton.h
 
 RESOURCES += \
     res.qrc

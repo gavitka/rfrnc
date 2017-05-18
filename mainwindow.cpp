@@ -19,6 +19,7 @@
 #include "NcFramelessHelper.h"
 #include "mainview.h"
 #include "mainscene.h"
+#include "sutton.h"
 
 using namespace std;
 
@@ -73,7 +74,7 @@ void MainWindow::openFile()
     // NOT WORKING
 
     QPushButton * pushButton = new QPushButton("ssibal", this);
-    QPushButton * pushButton2 = new QPushButton("shit", this);
+    Sutton * pushButton2 = new Sutton(this);
     QSpacerItem *spaceritem1 = new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Expanding);
 
     QHBoxLayout *hboxLayout = new QHBoxLayout();
@@ -123,6 +124,8 @@ void MainWindow::openFile()
     //----------------------------------------------------------------------------------------------------------
 
     setCentralWidget(centralWidget);
+
+    QWidget::setAttribute(Qt::WA_NativeWindow, true);
 
     setMinimumWidth(overlayWidget->width()+marginAmount*2); // TODO: FIX
     setMinimumHeight(overlayWidget->height()+marginAmount*2);
