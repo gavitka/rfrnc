@@ -8,3 +8,5 @@ TODO list
 - [ ] Hide buttons on mouse out
 - [ ] Implement shadow somehow
 - [ ] Try native borderless window (Implement resize)
+- [ ] save scrolling pos
+- [ ] jpg, png
