@@ -10,5 +10,6 @@ MainScene::MainScene()
 
 bool MainScene::event(QEvent *event)
 {
+    Q_UNUSED(event);
     return false;
 }

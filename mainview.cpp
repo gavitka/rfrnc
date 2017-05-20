@@ -107,10 +107,6 @@ void MainView::wheelEvent(QWheelEvent* event)
                 minFactor :
                 (scaleFactor >= maxFactor) ? maxFactor : scaleFactor;
 
-    qDebug() << "scale" << scale;
-    qDebug() << "scaleFactor" << scaleFactor;
-
-
     setTransformationAnchor(QGraphicsView::AnchorViewCenter);
     setTransform(QTransform(scaleFactor, 0, 0, scaleFactor, 0, 0));
 }

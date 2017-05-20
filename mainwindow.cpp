@@ -13,6 +13,9 @@
 #include <math.h>
 #include <QCoreApplication>
 #include <QColor>
+#include <QPushButton>
+#include <QChar>
+#include <QApplication>
 
 #include <QTWidgets>
 
@@ -36,16 +39,6 @@ MainWindow::MainWindow(QWidget *parent)
     mFh->useRubberBandOnMove(true);
     mFh->useRubberBandOnResize(true);
 
-    openFile();
-}
-
-MainWindow::~MainWindow()
-{
-    delete m_mainview;
-}
-
-void MainWindow::openFile()
-{
     QFile file (QString(":/Images/collage.psd"));
     file.open(QIODevice::ReadOnly);
     auto handler = new QPsdHandler();
@@ -57,7 +50,6 @@ void MainWindow::openFile()
     QLabel* label = new QLabel();
     QPixmap pix = QPixmap::fromImage(image);
     label->setPixmap(pix);
-    //label->resize(pix.size());
 
     MainScene* scene = new MainScene();
     scene->addWidget(label);
@@ -73,12 +65,24 @@ void MainWindow::openFile()
     //----------------------------------------------------------------------------------------------------------
     // NOT WORKING
 
-    Sutton * pushButton = new Sutton(this);
-    pushButton->setMainclr("#547a6b");
     Sutton * pushButton2 = new Sutton(this);
     pushButton2->setMainclr("#547a6b");
+    pushButton2->setHoverclr("#39df9d");
+    pushButton2->setSymbol(QChar(0xE972));
+
+
     Sutton * pushButton3 = new Sutton(this);
     pushButton3->setMainclr("#547a6b");
+    pushButton3->setHoverclr("#39df9d");
+    pushButton3->setSymbol(QChar(0xE712));
+
+    Sutton * quitButton = new Sutton(this);
+    quitButton->setMainclr("#547a6b");
+    quitButton->setHoverclr("#9e3d3d");
+    quitButton->setSymbol(QChar(0xE711));
+    QObject::connect(quitButton, SIGNAL(clicked()), this, SLOT(quitApp()));
+
+    //auto pushButton4 = new QPushButton(this);
     QSpacerItem *spaceritem1 = new QSpacerItem(marginAmount*1.5,
                                                marginAmount*1.5,
                                                QSizePolicy::Fixed,
@@ -94,7 +98,8 @@ void MainWindow::openFile()
     hboxLayout->addSpacerItem(spaceritem1);
     hboxLayout->addWidget(pushButton2, 0, Qt::AlignRight | Qt::AlignBottom);
     hboxLayout->addSpacerItem(spaceritem2);
-    hboxLayout->addWidget(pushButton, 0, Qt::AlignRight | Qt::AlignBottom);
+    hboxLayout->addWidget(quitButton, 0, Qt::AlignRight | Qt::AlignBottom);
+    //hboxLayout->addWidget(pushButton4, 0, Qt::AlignRight | Qt::AlignBottom);
     hboxLayout->setSpacing(0);
 
     //    QStackedLayout *stackedLayout = new QStackedLayout();
@@ -155,6 +160,11 @@ void MainWindow::openFile()
     overlayWidget->move(width() - overlayWidget->width() - marginAmount, height() - overlayWidget->height() - marginAmount);
 }
 
+MainWindow::~MainWindow()
+{
+    delete m_mainview;
+}
+
 void MainWindow::focusOutEvent (QFocusEvent *event)
 {
     //QFocusEvent event();
@@ -162,7 +172,13 @@ void MainWindow::focusOutEvent (QFocusEvent *event)
 }
 
 void MainWindow::resizeEvent(QResizeEvent *event) {
+    Q_UNUSED(event);
     overlayWidget->move(width() - overlayWidget->width() - marginAmount, height() - overlayWidget->height() - marginAmount);
+}
+
+void MainWindow::quitApp()
+{
+    QApplication::quit();
 }
 
 

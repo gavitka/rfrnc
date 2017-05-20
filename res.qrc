@@ -3,4 +3,7 @@
         <file>collage.psd</file>
         <file>gay.jpg</file>
     </qresource>
+    <qresource prefix="/">
+        <file>segoe-mdl2-assets.ttf</file>
+    </qresource>
 </RCC>

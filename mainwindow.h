@@ -18,6 +18,9 @@ public:
 
     QImage * mainImage;
 
+public slots:
+    void quitApp();
+
 private:
 
     MainView* m_mainview;
@@ -29,7 +32,6 @@ private:
 
     int m_nMouseClick_X_Coordinate;
     int m_nMouseClick_Y_Coordinate;
-    void openFile();
 };
 
 #endif // MAINWINDOW_H
