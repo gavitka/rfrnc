@@ -1,12 +1,17 @@
 TODO list
 
-- [ ] Add buttons:
-- [ ]   Close 
-- [ ]   Open file
-- [ ]   Collapse to circle
-- [ ] Use UI Font (like Segoe)
+- [x] Add buttons:
+- [x]   Close 
+- [x]   Open file
+- [x]   Collapse to circle
+- [x] Use UI Font (like Segoe)
 - [ ] Hide buttons on mouse out
 - [ ] Implement shadow somehow
 - [ ] Try native borderless window (Implement resize)
-- [ ] save scrolling pos
 - [ ] jpg, png
+- [ ] save scrolling pos
+- [ ] save scene pos
+- [ ] auto reload
+- [ ] remake scene each time
+- [x] main Window jumps from other monitor
+- [x] main window jumps on collapse

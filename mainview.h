@@ -5,14 +5,27 @@
 #include <QTime>
 
 class QGraphicsScene;
-class QGraphicsSceneMouseEvent;
 class QMouseEvent;
+class QSettings;
 
 class MainView : public QGraphicsView
 {
-public:
-    MainView(QGraphicsScene *scene, QWidget *parent = Q_NULLPTR);
+    Q_OBJECT
 
+    Q_PROPERTY(int scale READ scale WRITE setScale)
+
+public:
+    MainView(QGraphicsScene *scene, QWidget *parent = Q_NULLPTR, QSettings *settingsValues = Q_NULLPTR);
+    int scale() {return m_scale;}
+    void setScale(int value);
+    QSettings *settings;
+
+    void rememberScroll();
+    void saveScroll();
+
+signals:
+
+    void setPixmap(QPixmap* pixmap);
 
 private:
 
@@ -25,6 +38,9 @@ private:
 
     bool m_scrolling;
     bool m_selected;
+
+    qreal m_scaleFactor;
+    int m_scale;
 
     QPoint m_mousePressViewPoint;
     QPoint m_clickStartPoint;

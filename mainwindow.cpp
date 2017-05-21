@@ -37,16 +37,15 @@ MainWindow::MainWindow(QWidget *parent):
     mFh->useRubberBandOnMove(true);
     mFh->useRubberBandOnResize(true);
 
-    QSettings settings;
+    settings = new QSettings();
 
     scene = new MainScene();
-    setFileName(settings.value("filename").toString());
+    setFileName(settings->value("filename").toString());
 
-    m_mainview = new MainView(scene, this);
+    m_mainview = new MainView(scene, this, settings);
     m_mainview->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     m_mainview->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     m_mainview->setBackgroundBrush(QBrush(QColor("#858e8e")));
-
     Sutton * openFileButton = new Sutton(this);
     openFileButton->setMainclr("#547a6b");
     openFileButton->setHoverclr("#39df9d");
@@ -57,6 +56,7 @@ MainWindow::MainWindow(QWidget *parent):
     collapseButton->setMainclr("#547a6b");
     collapseButton->setHoverclr("#39df9d");
     collapseButton->setSymbol(QChar(0xE972));
+    QObject::connect(collapseButton, SIGNAL(clicked()), this, SLOT(switchPreview()));
 
     Sutton * quitButton = new Sutton(this);
     quitButton->setMainclr("#547a6b");
@@ -111,10 +111,10 @@ MainWindow::MainWindow(QWidget *parent):
 
     int x0, y0, w, h;
 
-    x0 = settings.value("windowX").toInt();
-    y0 = settings.value("windowY").toInt();
-    w = settings.value("windowWidth").toInt();
-    h = settings.value("windowHeight").toInt();
+    x0 = settings->value("windowX").toInt();
+    y0 = settings->value("windowY").toInt();
+    w = settings->value("windowWidth").toInt();
+    h = settings->value("windowHeight").toInt();
 
     move(x0, y0);
 
@@ -140,7 +140,7 @@ void MainWindow::setFileName(QString value)
 
         qDebug(item == Q_NULLPTR ? "true": "false");
         if(item != Q_NULLPTR) scene->removeItem(item);
-        settings.setValue("filename", value);
+        settings->setValue("filename", value);
 
         file.open(QIODevice::ReadOnly);
         auto handler = new QPsdHandler();
@@ -162,7 +162,8 @@ void MainWindow::focusOutEvent (QFocusEvent *event)
     QCoreApplication::sendEvent(m_mainview,event);
 }
 
-void MainWindow::resizeEvent(QResizeEvent *event) {
+void MainWindow::resizeEvent(QResizeEvent *event)
+{
     Q_UNUSED(event);
     overlayWidget->move(width() - overlayWidget->width() - marginAmount, height() - overlayWidget->height() - marginAmount);
     QMainWindow::resizeEvent(event);
@@ -176,13 +177,15 @@ void MainWindow::quitApp()
 
 void MainWindow::savePositionSettings()
 {
-    settings.setValue("windowX", this->frameGeometry().x());
-    settings.setValue("windowY", this->frameGeometry().y());
-    settings.setValue("windowWidth", this->frameGeometry().width());
-    settings.setValue("windowHeight", this->frameGeometry().height());
+    m_mainview->saveScroll();
+    settings->setValue("windowX", this->frameGeometry().x());
+    settings->setValue("windowY", this->frameGeometry().y());
+    settings->setValue("windowWidth", this->frameGeometry().width());
+    settings->setValue("windowHeight", this->frameGeometry().height());
 }
 
 void MainWindow::closeEvent(QCloseEvent *event) {
+    Q_UNUSED(event)
     savePositionSettings();
 }
 
@@ -192,4 +195,45 @@ void MainWindow::openFile() {
                                             tr("Open Image"), "E:/Developement", tr("Image Files (*.png *.jpg *.bmp *.psd)")); //TODO: Save path
     if(fileName == "") return;
     setFileName(fileName);
+}
+
+void MainWindow::switchPreview()
+{
+    this->setPixmap(&pix,
+                    this->frameGeometry().x() + this->frameGeometry().width()/2,
+                    this->frameGeometry().y() + this->frameGeometry().height()/2); // passes center point
+    this->hide();
+}
+
+void MainWindow::showMainWindow(int cx, int cy)
+{
+    this->show();
+    this->setPositionCheck(cx - this->frameGeometry().width()/2,
+                           cy - this->frameGeometry().height()/2);
+}
+
+void MainWindow::setPositionCheck(int cx, int cy)
+{
+    move(cx,cy);
+
+    int newx, newy;
+
+    qDebug() << "screenumber" << QDesktopWidget().screenNumber(this);
+    int screenNumber = QDesktopWidget().screenNumber(this);
+    QRect rect = QDesktopWidget().availableGeometry(screenNumber);
+    int maxx = rect.x() + QDesktopWidget().screenGeometry(screenNumber).x();
+    int maxy = rect.x() + QDesktopWidget().screenGeometry(screenNumber).y();
+
+    if(cx + this->frameGeometry().width() > maxx)
+        newx = rect.width() - this->frameGeometry().width();
+    else
+        newx = cx;
+
+    if(cy + this->frameGeometry().height() > maxy)
+        newy = rect.height() - this->frameGeometry().height();
+    else
+        newy = cy;
+
+    move(newx, newy);
+
 }

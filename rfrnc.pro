@@ -29,14 +29,19 @@ SOURCES += main.cpp\
     mainview.cpp \
     NcFramelessHelper.cpp \
     mainscene.cpp \
-    sutton.cpp
+    sutton.cpp \
+    circlepreview.cpp
 
 HEADERS  += mainwindow.h \
     qpsdhandler.h \
     mainview.h \
     NcFramelessHelper.h \
     mainscene.h \
-    sutton.h
+    sutton.h \
+    circlepreview.h
 
 RESOURCES += \
     res.qrc
+
+DISTFILES += \
+    TODO.md

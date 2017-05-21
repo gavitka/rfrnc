@@ -43,9 +43,6 @@ void Sutton::paintEvent(QPaintEvent* event) {
     painter.drawEllipse(rect());
 
     QFont font("Segoe MDL2 Assets",12,QFont::Normal);
-    QPointF point;
-    point.setX(rect().x());
-    point.setY(rect().y());
 
     QPen penHText(*m_textcurrentclr);
     painter.setFont(font);

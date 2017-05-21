@@ -28,10 +28,13 @@ public:
 
 signals:
     void fileNameChanged();
+    void setPixmap(QPixmap*, int cx, int cy);
 
 public slots:
     void quitApp();
     void openFile();
+    void switchPreview();
+    void showMainWindow(int,int);
 
 private:
 
@@ -40,7 +43,7 @@ private:
     QWidget* overlayWidget;
     MainScene *scene;
 
-    QSettings settings;
+    QSettings *settings;
     QString m_filename;
     QImage image;
     QPixmap pix;
@@ -53,6 +56,7 @@ private:
     int m_nMouseClick_X_Coordinate;
     int m_nMouseClick_Y_Coordinate;
     void savePositionSettings();
+    void setPositionCheck(int cx, int cy);
 };
 
 #endif // MAINWINDOW_H

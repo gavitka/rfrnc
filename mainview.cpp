@@ -7,15 +7,62 @@
 #include <QScrollBar>
 #include <QDebug>
 #include <math.h>
+#include <QSettings>
 
 using namespace std;
 
-MainView::MainView(QGraphicsScene *scene, QWidget *parent):
-    QGraphicsView(scene, parent)
+MainView::MainView(QGraphicsScene *scene, QWidget *parent, QSettings *settingsValue):
+    QGraphicsView(scene, parent),
+    settings(settingsValue),
+    m_scaleFactor (0),
+    m_scale(0)
 {
     m_scrolling = false;
     m_selected = false;
+    setScale(settings->value("sceneScale").toInt());
+    rememberScroll();
     setStyleSheet("border: 2px solid #0f3c38");
+}
+
+void MainView::rememberScroll() // slot?
+{
+    QScrollBar *hBar = horizontalScrollBar();
+    QScrollBar *vBar = verticalScrollBar();
+    qDebug() << "remx" << settings->value("sceneX").toInt();
+    qDebug() << "remy" << settings->value("sceneY").toInt();
+    hBar->setValue(settings->value("sceneX").toInt());
+    vBar->setValue(settings->value("sceneY").toInt());
+    qDebug() << "wasx" << hBar->value();
+    qDebug() << "wasy" << vBar->value();
+}
+
+void MainView::saveScroll() // slot?
+{
+    QScrollBar *hBar = horizontalScrollBar();
+    QScrollBar *vBar = verticalScrollBar();
+    qDebug() << "savx" << hBar->value();
+    qDebug() << "savy" << vBar->value();
+    settings->setValue("sceneX",hBar->value());
+    settings->setValue("sceneY",vBar->value());
+}
+
+void MainView::setScale(int value)
+{
+    const qreal minFactor = .1;
+    const qreal maxFactor = 10.0;
+
+    value = value > log(maxFactor)*4 ? log(maxFactor)*4 : value;
+    value = value < log(minFactor)*4 ? log(minFactor)*4 : value;
+
+    m_scale = value;
+
+    m_scaleFactor = exp((qreal)m_scale/4);
+    m_scaleFactor = (value == -1 ||value == 1)? 1 : m_scaleFactor;
+
+    setTransformationAnchor(QGraphicsView::AnchorViewCenter);
+    setTransform(QTransform(m_scaleFactor, 0, 0, m_scaleFactor, 0, 0));
+
+    settings->setValue("sceneScale", m_scale);
 }
 
 void MainView::mousePressEvent(QMouseEvent *e)
@@ -36,6 +83,7 @@ void MainView::mousePressEvent(QMouseEvent *e)
 void MainView::mouseReleaseEvent(QMouseEvent *e)
 {
     int difference = time.elapsed();
+
     QPoint delta = (e->pos() - m_clickStartPoint);
     int deltasize = std::abs(delta.x()) + std::abs(delta.y());
     if (difference < 200 && deltasize < 10) {
@@ -68,6 +116,10 @@ void MainView::mouseMoveEvent(QMouseEvent *e)
         QPoint delta = (e->pos() - m_mousePressViewPoint);
         hBar->setValue(hBar->value() + (isRightToLeft() ? delta.x() : -delta.x()));
         vBar->setValue(vBar->value() - delta.y());
+
+        qDebug() << "wasx" << hBar->value();
+        qDebug() << "wasy" << vBar->value();
+
         m_mousePressViewPoint = e->pos();
     }
     else {
@@ -90,25 +142,12 @@ void MainView::wheelEvent(QWheelEvent* event)
     const int degrees = event->delta() / 8;
     int steps = degrees / 15;
 
-    static qreal scale = 0;
-    static qreal scaleFactor = 0;
-    const qreal minFactor = .1;
-    const qreal maxFactor = 10.0;
-
-    if (steps > 0 && scaleFactor < maxFactor) {
-        scale ++;
+    if (steps > 0) {
+        setScale(scale() + 1);
     }
-    else if (steps < 0 && scaleFactor > minFactor) {
-        scale --;
+    else if (steps < 0) {
+        setScale(scale() - 1);
     }
-
-    scaleFactor = exp(scale/4);
-    scaleFactor = (scaleFactor <= minFactor) ?
-                minFactor :
-                (scaleFactor >= maxFactor) ? maxFactor : scaleFactor;
-
-    setTransformationAnchor(QGraphicsView::AnchorViewCenter);
-    setTransform(QTransform(scaleFactor, 0, 0, scaleFactor, 0, 0));
 }
 
 bool MainView::event(QEvent *event)
