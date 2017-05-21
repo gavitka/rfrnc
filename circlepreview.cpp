@@ -68,6 +68,8 @@ void CirclePreview::mouseReleaseEvent(QMouseEvent * event)
     int deltasize = std::abs(delta.x()) + std::abs(delta.y());
     if (difference < 200 && deltasize < 10) {
         this->hide();
+        qDebug() << "circ" << this->frameGeometry().x() << this->frameGeometry().y() <<
+                    this->frameGeometry().width() << this->frameGeometry().height();
         showMainWindow(this->frameGeometry().x() + this->frameGeometry().width()/2,
                        this->frameGeometry().y() + this->frameGeometry().height()/2); // passes center point
     }

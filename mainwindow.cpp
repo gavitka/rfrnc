@@ -16,6 +16,7 @@
 #include <QPushButton>
 #include <QChar>
 #include <QApplication>
+#include <QFileInfo>
 
 #include <QTWidgets>
 
@@ -30,7 +31,8 @@ const int marginAmount = 10;
 
 MainWindow::MainWindow(QWidget *parent):
     QMainWindow(parent),
-    item (Q_NULLPTR)
+    item (Q_NULLPTR),
+    scene (Q_NULLPTR)
 {
     mFh = new NcFramelessHelper;
     mFh->activateOn( this );
@@ -137,19 +139,29 @@ void MainWindow::setFileName(QString value)
 {
     QFile file (value);
     if (file.exists()) {
+        QFileInfo info(value);
+        if(info.suffix() == "psd") {
+            qDebug(item == Q_NULLPTR ? "true": "false");
+            if(item != Q_NULLPTR) scene->removeItem(item);
 
-        qDebug(item == Q_NULLPTR ? "true": "false");
-        if(item != Q_NULLPTR) scene->removeItem(item);
+            file.open(QIODevice::ReadOnly);
+            auto handler = new QPsdHandler();
+            handler->setDevice(&file);
+            handler->setFormat("psd");
+            handler->read(&image);
+            pix = QPixmap::fromImage(image);
+        }
+        else if(info.suffix() == "jpg" ||
+                info.suffix() == "gif" ||
+                info.suffix() == "png") {
+            pix.load(value);
+        }
+        else {
+            qDebug("Wrong file format.");
+            return;
+        }
         settings->setValue("filename", value);
-
-        file.open(QIODevice::ReadOnly);
-        auto handler = new QPsdHandler();
-        handler->setDevice(&file);
-        handler->setFormat("psd");
-        handler->read(&image);
-
-        pix = QPixmap::fromImage(image);
-
+        scene->clear();
         item = scene->addPixmap(pix);
     }
     else {
@@ -210,6 +222,7 @@ void MainWindow::showMainWindow(int cx, int cy)
     this->show();
     this->setPositionCheck(cx - this->frameGeometry().width()/2,
                            cy - this->frameGeometry().height()/2);
+    qDebug() << "shoi" << cx << cy << this->frameGeometry().width() << this->frameGeometry().height();
 }
 
 void MainWindow::setPositionCheck(int cx, int cy)
@@ -218,11 +231,10 @@ void MainWindow::setPositionCheck(int cx, int cy)
 
     int newx, newy;
 
-    qDebug() << "screenumber" << QDesktopWidget().screenNumber(this);
     int screenNumber = QDesktopWidget().screenNumber(this);
     QRect rect = QDesktopWidget().availableGeometry(screenNumber);
-    int maxx = rect.x() + QDesktopWidget().screenGeometry(screenNumber).x();
-    int maxy = rect.x() + QDesktopWidget().screenGeometry(screenNumber).y();
+    int maxx = rect.width() + QDesktopWidget().screenGeometry(screenNumber).x();
+    int maxy = rect.height() + QDesktopWidget().screenGeometry(screenNumber).y();
 
     if(cx + this->frameGeometry().width() > maxx)
         newx = rect.width() - this->frameGeometry().width();
@@ -237,3 +249,16 @@ void MainWindow::setPositionCheck(int cx, int cy)
     move(newx, newy);
 
 }
+
+void MainWindow::leaveEvent(QEvent *event)
+{
+    Q_UNUSED(event)
+    overlayWidget->hide();
+}
+
+void MainWindow::enterEvent(QEvent *event)
+{
+    Q_UNUSED(event)
+    overlayWidget->show();
+}
+

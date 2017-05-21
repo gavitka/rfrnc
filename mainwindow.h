@@ -41,13 +41,13 @@ private:
     MainView* m_mainview;
     NcFramelessHelper* mFh;
     QWidget* overlayWidget;
-    MainScene *scene;
 
     QSettings *settings;
     QString m_filename;
     QImage image;
     QPixmap pix;
     QGraphicsItem *item;
+    MainScene *scene;
 
     void focusOutEvent (QFocusEvent *event);
     void resizeEvent (QResizeEvent *event);
@@ -57,6 +57,8 @@ private:
     int m_nMouseClick_Y_Coordinate;
     void savePositionSettings();
     void setPositionCheck(int cx, int cy);
+    void leaveEvent(QEvent *event);
+    void enterEvent(QEvent *event);
 };
 
 #endif // MAINWINDOW_H

@@ -5,10 +5,10 @@ TODO list
 - [x]   Open file
 - [x]   Collapse to circle
 - [x] Use UI Font (like Segoe)
-- [ ] Hide buttons on mouse out
-- [ ] Implement shadow somehow
-- [ ] Try native borderless window (Implement resize)
-- [ ] jpg, png
+- [x] Hide buttons on mouse out
+- [ ] Implement shadow somehow (FFUU)
+- [ ] Try native borderless window (Implement resize) (FFUU)
+- [x] jpg, png
 - [ ] save scrolling pos
 - [ ] save scene pos
 - [ ] auto reload
