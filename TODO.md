@@ -15,3 +15,5 @@ TODO list
 - [ ] remake scene each time
 - [x] main Window jumps from other monitor
 - [x] main window jumps on collapse
+- [x] default folder
+- [ ] try scrollcontentsby

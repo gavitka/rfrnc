@@ -28,20 +28,17 @@ void MainView::rememberScroll() // slot?
 {
     QScrollBar *hBar = horizontalScrollBar();
     QScrollBar *vBar = verticalScrollBar();
-    qDebug() << "remx" << settings->value("sceneX").toInt();
-    qDebug() << "remy" << settings->value("sceneY").toInt();
+
     hBar->setValue(settings->value("sceneX").toInt());
     vBar->setValue(settings->value("sceneY").toInt());
-    qDebug() << "wasx" << hBar->value();
-    qDebug() << "wasy" << vBar->value();
+
 }
 
 void MainView::saveScroll() // slot?
 {
     QScrollBar *hBar = horizontalScrollBar();
     QScrollBar *vBar = verticalScrollBar();
-    qDebug() << "savx" << hBar->value();
-    qDebug() << "savy" << vBar->value();
+
     settings->setValue("sceneX",hBar->value());
     settings->setValue("sceneY",vBar->value());
 }
@@ -116,10 +113,6 @@ void MainView::mouseMoveEvent(QMouseEvent *e)
         QPoint delta = (e->pos() - m_mousePressViewPoint);
         hBar->setValue(hBar->value() + (isRightToLeft() ? delta.x() : -delta.x()));
         vBar->setValue(vBar->value() - delta.y());
-
-        qDebug() << "wasx" << hBar->value();
-        qDebug() << "wasy" << vBar->value();
-
         m_mousePressViewPoint = e->pos();
     }
     else {

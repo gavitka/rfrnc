@@ -42,8 +42,8 @@ void CirclePreview::paintEvent(QPaintEvent *event)
 
     int maxsize = max(m_pixmap->width(), m_pixmap->height());
     qreal fact = (qreal)circlesize / maxsize;
-    qDebug() << fact;
-    brush.setTransform(QTransform(fact*2,0,0,fact*2,-circlesize/2,0));
+
+    brush.setTransform(QTransform(fact*2,0,0,fact*2,0,-circlesize/2));
 
     painter.setPen(pen);
     painter.setBrush(brush);
@@ -55,23 +55,16 @@ void CirclePreview::mousePressEvent(QMouseEvent *event){
     time.start();
     m_clickStartPoint = event->globalPos();
     m_mousePressViewPoint = event->pos();
-    qDebug() << "press happened" << m_clickStartPoint.x() << m_clickStartPoint.y();
 }
 
 void CirclePreview::mouseReleaseEvent(QMouseEvent * event)
 {
     int difference = time.elapsed();
-    qDebug() << "event->pos()" << event->pos().x() << event->pos().y();
-    qDebug() << "diff" << difference;
     QPoint delta = (event->globalPos() - m_clickStartPoint);
-    qDebug() << "delta" << delta.x()<< delta.y();
     int deltasize = std::abs(delta.x()) + std::abs(delta.y());
     if (difference < 200 && deltasize < 10) {
         this->hide();
-        qDebug() << "circ" << this->frameGeometry().x() << this->frameGeometry().y() <<
-                    this->frameGeometry().width() << this->frameGeometry().height();
         showMainWindow(this->frameGeometry().x() + this->frameGeometry().width()/2,
                        this->frameGeometry().y() + this->frameGeometry().height()/2); // passes center point
     }
-    qDebug() << "release happened";
 }

@@ -2,6 +2,7 @@
 #include <qpsdhandler.h>
 #include <QImage>
 #include <QFile>
+#include <QDir>
 #include <QLabel>
 #include <QPixmap>
 #include <QString>
@@ -17,6 +18,7 @@
 #include <QChar>
 #include <QApplication>
 #include <QFileInfo>
+#include <QStandardPaths>
 
 #include <QTWidgets>
 
@@ -42,9 +44,11 @@ MainWindow::MainWindow(QWidget *parent):
     settings = new QSettings();
 
     scene = new MainScene();
-    setFileName(settings->value("filename").toString());
 
     m_mainview = new MainView(scene, this, settings);
+
+    setFileName(settings->value("filename").toString());
+
     m_mainview->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     m_mainview->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     m_mainview->setBackgroundBrush(QBrush(QColor("#858e8e")));
@@ -141,7 +145,6 @@ void MainWindow::setFileName(QString value)
     if (file.exists()) {
         QFileInfo info(value);
         if(info.suffix() == "psd") {
-            qDebug(item == Q_NULLPTR ? "true": "false");
             if(item != Q_NULLPTR) scene->removeItem(item);
 
             file.open(QIODevice::ReadOnly);
@@ -160,9 +163,11 @@ void MainWindow::setFileName(QString value)
             qDebug("Wrong file format.");
             return;
         }
+        m_filename = value;
         settings->setValue("filename", value);
         scene->clear();
         item = scene->addPixmap(pix);
+        m_mainview->resetTransform();
     }
     else {
         qDebug("Error: file not exist.");
@@ -203,8 +208,16 @@ void MainWindow::closeEvent(QCloseEvent *event) {
 
 void MainWindow::openFile() {
     QString fileName;
+    QFileInfo fileinfo(m_filename);
+    QString dir;
+    if(m_filename.isEmpty())
+        dir = QStandardPaths::PicturesLocation;
+    else
+        dir = fileinfo.dir().absolutePath();
     fileName = QFileDialog::getOpenFileName(this,
-                                            tr("Open Image"), "E:/Developement", tr("Image Files (*.png *.jpg *.bmp *.psd)")); //TODO: Save path
+                                            tr("Open Image"),
+                                            dir,
+                                            tr("Image Files (*.png *.jpg *.bmp *.psd)")); //TODO: Save path
     if(fileName == "") return;
     setFileName(fileName);
 }
@@ -222,7 +235,6 @@ void MainWindow::showMainWindow(int cx, int cy)
     this->show();
     this->setPositionCheck(cx - this->frameGeometry().width()/2,
                            cy - this->frameGeometry().height()/2);
-    qDebug() << "shoi" << cx << cy << this->frameGeometry().width() << this->frameGeometry().height();
 }
 
 void MainWindow::setPositionCheck(int cx, int cy)
